@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Main {
@@ -6,13 +7,34 @@ public class Main {
     public static void main(String[] args) {
         Scanner myScn = new Scanner(System.in);
         boolean should_stop = false;
+        int nodekey;
         do{
-            System.out.println("Podaj id wierzchołka");
-            int nodekey = Integer.parseInt(myScn.nextLine());
-            GraphNode n1 = new GraphNode(nodekey);
-            nodes.add(n1);
-            Connect(n1);
-            System.out.println("Dodać jescze jakieś węzły? 0 - tak, 1 - nie");
+            System.out.println("Chcesz dodać nowy wierzchołek (wpisz 0) czy dodać nową krawędź do istniejącego wierzchołka (wpisz 1)?");
+            int action_response = Integer.parseInt(myScn.nextLine());
+            switch (action_response){
+                case 0:
+                    System.out.println("Podaj klucz wierzchołka");
+                    nodekey = Integer.parseInt(myScn.nextLine());
+                    GraphNode n1 = new GraphNode(nodekey);
+                    nodes.add(n1);
+                    Connect(n1);
+                    break;
+                case 1:
+                    System.out.println("Podaj klucz wierzchołka");
+                    nodekey = Integer.parseInt(myScn.nextLine());
+                    GraphNode node_with_new_con = new GraphNode(-99);
+                    for (GraphNode gn: nodes){
+                        if (gn.key == nodekey){
+                            node_with_new_con = gn;
+                        }
+                    }
+                    if(node_with_new_con.key != -99){
+                        Connect(node_with_new_con);
+                    }
+
+            }
+
+            System.out.println("Chcesz dalej modyfikować graf? 0 - tak, 1 - nie");
             int continue_response = Integer.parseInt(myScn.nextLine());
             switch (continue_response){
                 case 0:
@@ -31,6 +53,7 @@ public class Main {
                 System.out.println("Węzłem o kluczu " + ge.nodeToConnect.key + " połączeniem o wadze " + ge.weight);
             }
         }
+        System.out.println("Liczba chromatyczna tego grafu to " + GraphColoring());
     }
     public static void Connect(GraphNode con_node){
         Scanner myScn = new Scanner(System.in);
@@ -72,6 +95,7 @@ public class Main {
         color_list.add("green");
         int chromatic_num = 0;
         ArrayList<String> colors_in_graph = new ArrayList<>();
+        colors_in_graph.add("no_color");
         ArrayList<String> colors_of_neighbors = new ArrayList<>();
         int node_index = 0;
         for(GraphNode gn : nodes){
@@ -83,6 +107,7 @@ public class Main {
                 colors_in_graph.add(node_color);
                 color_list.remove(node_color);
                 chromatic_num++;
+                System.out.println("Liczba chromatyczna wzrasta dla wierzchołka o kluczu " + gn.key);
             }
             else{
                 for(GraphEdge ge : gn.edges){
@@ -99,6 +124,7 @@ public class Main {
                     colors_in_graph.add(node_color);
                     color_list.remove(node_color);
                     chromatic_num++;
+                    System.out.println("Liczba chromatyczna wzrasta dla wierzchołka o kluczu " + gn.key);
                 }
             }
             node_index++; //pozostaw to na dole
@@ -106,6 +132,7 @@ public class Main {
         }
         return chromatic_num;
     }
+
     static boolean HasCommonElements(ArrayList<String> ar1, ArrayList<String> ar2){
         boolean result = false;
         int max = 0;
@@ -115,11 +142,13 @@ public class Main {
         else {
             max = ar1.size();
         }
-        for(int i = 0; i < max - 1; i++){
+        Collections.sort(ar1);
+        Collections.sort(ar2);
+        for(int i = 0; i <= max - 1; i++){
             String element1 = ar1.get(i);
             String element2 = ar2.get(i);
             if(element1.equals(element2)){
-                return true;
+                result = true;
             }
         }
         return result;
