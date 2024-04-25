@@ -108,13 +108,16 @@ public class Main {
                 color_list.remove(node_color);
                 chromatic_num++;
                 System.out.println("Liczba chromatyczna wzrasta dla wierzchołka o kluczu " + gn.key);
+                node_index++;
             }
             else{
+
                 for(GraphEdge ge : gn.edges){
                     colors_of_neighbors.add(ge.nodeToConnect.color);
                 }
-                if(!HasCommonElements(colors_in_graph, colors_of_neighbors)){
-                    gn.color = colors_in_graph.get(0);
+                String color_to_use = HasDifferingElements(colors_in_graph, colors_of_neighbors);
+                if(!color_to_use.equals("nothing")){ //jeżeli w grafie jest jakiś kolor, który nie jest kolorem sąsiadów
+                    gn.color = color_to_use;
 
                 }
                 else {
@@ -126,30 +129,23 @@ public class Main {
                     chromatic_num++;
                     System.out.println("Liczba chromatyczna wzrasta dla wierzchołka o kluczu " + gn.key);
                 }
+                node_index++;
             }
-            node_index++; //pozostaw to na dole
+
             colors_of_neighbors.clear();
         }
         return chromatic_num;
     }
 
-    static boolean HasCommonElements(ArrayList<String> ar1, ArrayList<String> ar2){
-        boolean result = false;
-        int max = 0;
-        if(ar1.size() >= ar2.size()){
-            max = ar2.size();
-        }
-        else {
-            max = ar1.size();
-        }
-        Collections.sort(ar1);
-        Collections.sort(ar2);
-        for(int i = 0; i <= max - 1; i++){
-            String element1 = ar1.get(i);
-            String element2 = ar2.get(i);
-            if(element1.equals(element2)){
-                result = true;
+    static String HasDifferingElements(ArrayList<String> ar1, ArrayList<String> ar2){
+        String result = "nothing";
+
+        for(String str : ar1){
+            if(!ar2.contains(str) && !str.equals("no_color")){
+                result = str;
+                break;
             }
+
         }
         return result;
     }
