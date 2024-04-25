@@ -7,6 +7,7 @@ public class GraphNode {
     String color;
     public GraphNode(int id){
         key = id;
+        color = "";
     }
 
 }
