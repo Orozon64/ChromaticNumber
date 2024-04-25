@@ -62,29 +62,66 @@ public class Main {
     static ArrayList<String> color_list = new ArrayList<>();
 
 
-    static void GraphColoring(){ //Użyjemy zmodyfikowanej wersji algorytmu zachłannego. Jeśli jakiś kolor jest już w grafie - użyjemy go.
+    static int GraphColoring(){ //Użyjemy zmodyfikowanej wersji algorytmu zachłannego. Jeśli jakiś kolor jest już w grafie - użyjemy go.
+
         color_list.add("red");
         color_list.add("blue");
         color_list.add("white");
         color_list.add("black");
         color_list.add("orange");
         color_list.add("green");
-        int n = nodes.size();
+        int chromatic_num = 0;
         ArrayList<String> colors_in_graph = new ArrayList<>();
         ArrayList<String> colors_of_neighbors = new ArrayList<>();
+        int node_index = 0;
         for(GraphNode gn : nodes){
-            int node_index = 0;
+
             if(node_index == 0){
                 String node_color = color_list.get(0);
                 gn.color = node_color;
 
                 colors_in_graph.add(node_color);
                 color_list.remove(node_color);
+                chromatic_num++;
             }
             else{
-                
+                for(GraphEdge ge : gn.edges){
+                    colors_of_neighbors.add(ge.nodeToConnect.color);
+                }
+                if(!HasCommonElements(colors_in_graph, colors_of_neighbors)){
+                    gn.color = colors_in_graph.get(0);
+
+                }
+                else {
+                    String node_color = color_list.get(0);
+                    gn.color = node_color;
+
+                    colors_in_graph.add(node_color);
+                    color_list.remove(node_color);
+                    chromatic_num++;
+                }
             }
             node_index++; //pozostaw to na dole
+            colors_of_neighbors.clear();
         }
+        return chromatic_num;
+    }
+    static boolean HasCommonElements(ArrayList<String> ar1, ArrayList<String> ar2){
+        boolean result = false;
+        int max = 0;
+        if(ar1.size() >= ar2.size()){
+            max = ar2.size();
+        }
+        else {
+            max = ar1.size();
+        }
+        for(int i = 0; i < max - 1; i++){
+            String element1 = ar1.get(i);
+            String element2 = ar2.get(i);
+            if(element1.equals(element2)){
+                return true;
+            }
+        }
+        return result;
     }
 }
