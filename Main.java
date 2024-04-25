@@ -62,7 +62,7 @@ public class Main {
     static ArrayList<String> color_list = new ArrayList<>();
 
 
-    static void GraphColoring(){
+    static void GraphColoring(){ //Użyjemy zmodyfikowanej wersji algorytmu zachłannego. Jeśli jakiś kolor jest już w grafie - użyjemy go.
         color_list.add("red");
         color_list.add("blue");
         color_list.add("white");
@@ -71,6 +71,7 @@ public class Main {
         color_list.add("green");
         int n = nodes.size();
         ArrayList<String> colors_in_graph = new ArrayList<>();
+        ArrayList<String> colors_of_neighbors = new ArrayList<>();
         for(GraphNode gn : nodes){
             int node_index = 0;
             if(node_index == 0){
@@ -80,6 +81,10 @@ public class Main {
                 colors_in_graph.add(node_color);
                 color_list.remove(node_color);
             }
+            else{
+                
+            }
+            node_index++; //pozostaw to na dole
         }
     }
 }
